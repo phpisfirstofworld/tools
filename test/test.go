@@ -10,4 +10,5 @@ func main() {
 	re, _ := tools.GetWithString("https://github.com")
 
 	fmt.Println(re)
+	fmt.Println(re)
 }
