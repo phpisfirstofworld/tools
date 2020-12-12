@@ -98,7 +98,7 @@ func StrToTime(str string) int64 {
 
 	}
 
-	fmt.Println(r1)
+	//fmt.Println(r1)
 
 	times, _ := time.ParseInLocation("2006-01-02 15:04:05", str, time.Local)
 
