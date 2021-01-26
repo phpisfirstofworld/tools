@@ -97,9 +97,6 @@ func StrToTime(str string) int64 {
 		str = r1[1] + "-" + r1[2] + "-" + r1[3] + " " + com.GetString(r1[4], "00") + ":" + com.GetString(r1[5], "00") + ":" + com.GetString(r1[6], "00")
 
 	}
-
-	//fmt.Println(r1)
-
 	times, _ := time.ParseInLocation("2006-01-02 15:04:05", str, time.Local)
 
 	return times.Unix()
