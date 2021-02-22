@@ -1,7 +1,6 @@
 package tools
 
 import (
-	"fmt"
 	"io/ioutil"
 	"os"
 )
@@ -34,15 +33,18 @@ func WriteLine(path string, data string) {
 
 }
 
-func DeleteFile(path string) {
+func DeleteFile(path string) error {
 
 	err := os.Remove(path)
 
 	if err != nil {
 
-		fmt.Println("文件删除错误,", err)
+		//fmt.Println("文件删除错误,", err)
 
+		return err
 	}
+
+	return nil
 
 }
 
