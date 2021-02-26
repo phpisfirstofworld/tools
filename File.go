@@ -3,11 +3,10 @@ package tools
 import (
 	"io/ioutil"
 	"os"
+	"strings"
 )
 
 func WriteLine(path string, data string) {
-
-	//panic(path+"-------------"+data)
 
 	f, err := os.OpenFile(path, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0777)
 
@@ -17,8 +16,6 @@ func WriteLine(path string, data string) {
 
 		panic(err)
 	}
-
-	//f.Write([]byte(data + "\n"))
 
 	defer f.Close()
 
@@ -54,4 +51,20 @@ func ReadFile(path string) (string, error) {
 	data, err := ioutil.ReadFile(path)
 
 	return string(data), err
+}
+
+//获取文件名拓展名
+func GetExtensionName(fileName string) string {
+
+	index := strings.LastIndexFunc(fileName, func(r rune) bool {
+
+		if string(r) == "." {
+
+			return true
+		}
+
+		return false
+	})
+
+	return fileName[index+1:]
 }
