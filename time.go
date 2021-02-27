@@ -57,6 +57,19 @@ func Date(format string, timestamp int64) string {
 	case "Y/m/d H:i":
 
 		f = "2006/01/02 15:04"
+	case "Y":
+
+		f = "2006"
+	case "Ym":
+
+		f = "200601"
+	case "Ymd":
+
+		f = "20060102"
+	case "H":
+		f = "15"
+	case "Hi":
+		f = "1504"
 
 	}
 
