@@ -8,7 +8,7 @@ import (
 
 func WriteLine(path string, data string) {
 
-	f, err := os.OpenFile(path, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0777)
+	f, err := os.OpenFile(path, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0644)
 
 	if err != nil {
 
@@ -67,4 +67,32 @@ func GetExtensionName(fileName string) string {
 	})
 
 	return fileName[index+1:]
+}
+
+//创建多级文件夹
+func MkDirDepth(path string) error {
+
+	array := Explode("/", path)
+
+	currentPath := ""
+
+	for _, v := range array {
+
+		if v == "" {
+
+			continue
+		}
+
+		currentPath = currentPath + v + "/"
+
+		err := os.Mkdir(currentPath, 0644)
+
+		if err != nil && err.Error() != "mkdir "+currentPath+": Cannot create a file when that file already exists." {
+
+			return err
+		}
+
+	}
+
+	return nil
 }
