@@ -13,7 +13,7 @@ import (
 )
 
 //超时时间
-const HttpTimeOut = 10 * time.Second
+const HttpTimeOut = 30 * time.Second
 
 //请求底层函数
 func Query(url string, method string, parameter string, header map[string]string) (*http.Response, error) {
