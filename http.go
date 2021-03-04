@@ -1,28 +1,105 @@
 package tools
 
 import (
-	"compress/gzip"
 	"errors"
 	_ "github.com/satori/go.uuid"
 	"io"
 	"io/ioutil"
 	"net/http"
 	"os"
+	"strconv"
 	"strings"
 	"time"
 )
 
-//超时时间
-const HttpTimeOut = 30 * time.Second
+type HttpSetting struct {
+	TimeOut   int                    //超时时间
+	Header    map[string]string      //header
+	Parameter map[string]interface{} //参数
+}
 
 //请求底层函数
-func Query(url string, method string, parameter string, header map[string]string) (*http.Response, error) {
+func Query(url string, method string, setting HttpSetting) (*http.Response, error) {
 
 	client := http.Client{}
 
-	client.Timeout = HttpTimeOut
+	client.Timeout = time.Duration(setting.TimeOut) * time.Second
 
-	req, err := http.NewRequest(method, url, strings.NewReader(parameter))
+	var req *http.Request
+	var err error
+
+	if method == "GET" {
+
+		p := setting.Parameter
+
+		url += "?"
+
+		for i, v := range p {
+
+			switch key := v.(type) {
+
+			case string:
+
+				url += i + "=" + key + "&"
+
+			case int:
+
+				url += i + "=" + strconv.Itoa(key) + "&"
+
+			case []string:
+
+				for _, vv := range key {
+
+					url += i + "[]=" + vv + "&"
+
+				}
+
+			}
+
+		}
+
+		req, err = http.NewRequest(method, url, nil)
+
+	} else if method == "POST" {
+
+		postForm := ""
+
+		p := setting.Parameter
+
+		//url+="?"
+
+		for i, v := range p {
+
+			switch key := v.(type) {
+
+			case string:
+
+				postForm += i + "=" + key + "&"
+
+			case int:
+
+				postForm += i + "=" + strconv.Itoa(key) + "&"
+
+			case []string:
+
+				for _, vv := range key {
+
+					postForm += i + "[]=" + vv + "&"
+
+				}
+
+			}
+
+		}
+
+		req, err = http.NewRequest(method, url, strings.NewReader(postForm))
+
+		if req != nil {
+
+			req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+		}
+
+	}
 
 	if err != nil {
 
@@ -33,7 +110,7 @@ func Query(url string, method string, parameter string, header map[string]string
 	}
 
 	//设置头部
-	for i, v := range header {
+	for i, v := range setting.Header {
 
 		req.Header.Add(i, v)
 
@@ -58,9 +135,9 @@ func Query(url string, method string, parameter string, header map[string]string
 }
 
 //get获取字符串结果
-func GetWithString(url string) (string, error) {
+func GetToString(url string, setting HttpSetting) (string, error) {
 
-	resp, err := Query(url, "GET", "", nil)
+	resp, err := Query(url, "GET", setting)
 
 	if err != nil {
 
@@ -83,12 +160,10 @@ func GetWithString(url string) (string, error) {
 
 }
 
-/**
-header["Accept-Encoding"]="gzip, deflate, br"
-*/
-func GetSetHeaderWithString(url string, header map[string]string) (string, error) {
+//post获取字符串结果
+func PostToString(url string, setting HttpSetting) (string, error) {
 
-	resp, err := Query(url, "GET", "", header)
+	resp, err := Query(url, "POST", setting)
 
 	if err != nil {
 
@@ -97,15 +172,7 @@ func GetSetHeaderWithString(url string, header map[string]string) (string, error
 
 	defer resp.Body.Close()
 
-	r := resp.Body
-
-	if resp.Header.Get("Content-Encoding") == "gzip" {
-
-		r, _ = gzip.NewReader(resp.Body)
-
-	}
-
-	body, err := ioutil.ReadAll(r)
+	body, err := ioutil.ReadAll(resp.Body)
 
 	if err != nil {
 
@@ -119,10 +186,46 @@ func GetSetHeaderWithString(url string, header map[string]string) (string, error
 
 }
 
+///**
+//header["Accept-Encoding"]="gzip, deflate, br"
+//*/
+//func GetSetHeaderWithString(url string, header map[string]string) (string, error) {
+//
+//	resp, err := Query(url, "GET", "", header)
+//
+//	if err != nil {
+//
+//		return "", err
+//	}
+//
+//	defer resp.Body.Close()
+//
+//	r := resp.Body
+//
+//	if resp.Header.Get("Content-Encoding") == "gzip" {
+//
+//		r, _ = gzip.NewReader(resp.Body)
+//
+//	}
+//
+//	body, err := ioutil.ReadAll(r)
+//
+//	if err != nil {
+//
+//		//panic(err)
+//
+//		return "", err
+//
+//	}
+//
+//	return string(body), nil
+//
+//}
+
 //注意要手动关闭body
 func GetWithBody(url string) (io.ReadCloser, error) {
 
-	resp, err := Query(url, "GET", "", nil)
+	resp, err := Query(url, "GET", HttpSetting{})
 
 	if err != nil {
 
@@ -136,7 +239,7 @@ func GetWithBody(url string) (io.ReadCloser, error) {
 //注意要手动关闭body
 func GetWithResp(url string) (*http.Response, error) {
 
-	resp, err := Query(url, "GET", "", nil)
+	resp, err := Query(url, "GET", HttpSetting{})
 
 	if err != nil {
 
