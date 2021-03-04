@@ -223,7 +223,7 @@ func PostToString(url string, setting HttpSetting) (string, error) {
 //}
 
 //注意要手动关闭body
-func GetWithBody(url string) (io.ReadCloser, error) {
+func GetToBody(url string) (io.ReadCloser, error) {
 
 	resp, err := Query(url, "GET", HttpSetting{})
 
@@ -237,7 +237,7 @@ func GetWithBody(url string) (io.ReadCloser, error) {
 }
 
 //注意要手动关闭body
-func GetWithResp(url string) (*http.Response, error) {
+func GetToResp(url string) (*http.Response, error) {
 
 	resp, err := Query(url, "GET", HttpSetting{})
 
@@ -264,7 +264,7 @@ func DownloadImage(url string, path string) error {
 
 	defer f.Close()
 
-	resp, err := GetWithResp(url)
+	resp, err := GetToResp(url)
 
 	if err != nil {
 
@@ -331,7 +331,7 @@ func DownloadFile(url string, path string) error {
 
 	defer f.Close()
 
-	body, _ := GetWithBody(url)
+	body, _ := GetToBody(url)
 
 	defer body.Close()
 
