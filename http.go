@@ -186,42 +186,6 @@ func PostToString(url string, setting HttpSetting) (string, error) {
 
 }
 
-///**
-//header["Accept-Encoding"]="gzip, deflate, br"
-//*/
-//func GetSetHeaderWithString(url string, header map[string]string) (string, error) {
-//
-//	resp, err := Query(url, "GET", "", header)
-//
-//	if err != nil {
-//
-//		return "", err
-//	}
-//
-//	defer resp.Body.Close()
-//
-//	r := resp.Body
-//
-//	if resp.Header.Get("Content-Encoding") == "gzip" {
-//
-//		r, _ = gzip.NewReader(resp.Body)
-//
-//	}
-//
-//	body, err := ioutil.ReadAll(r)
-//
-//	if err != nil {
-//
-//		//panic(err)
-//
-//		return "", err
-//
-//	}
-//
-//	return string(body), nil
-//
-//}
-
 //注意要手动关闭body
 func GetToBody(url string) (io.ReadCloser, error) {
 
