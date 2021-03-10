@@ -1,6 +1,7 @@
 package tools
 
 import (
+	"compress/gzip"
 	"errors"
 	_ "github.com/satori/go.uuid"
 	"io"
@@ -146,11 +147,16 @@ func GetToString(url string, setting HttpSetting) (string, error) {
 
 	defer resp.Body.Close()
 
-	body, err := ioutil.ReadAll(resp.Body)
+	read, err := dealBody(resp)
 
 	if err != nil {
 
-		//panic(err)
+		return "", err
+	}
+
+	body, err := ioutil.ReadAll(read)
+
+	if err != nil {
 
 		return "", err
 
@@ -172,11 +178,16 @@ func PostToString(url string, setting HttpSetting) (string, error) {
 
 	defer resp.Body.Close()
 
-	body, err := ioutil.ReadAll(resp.Body)
+	read, err := dealBody(resp)
 
 	if err != nil {
 
-		//panic(err)
+		return "", err
+	}
+
+	body, err := ioutil.ReadAll(read)
+
+	if err != nil {
 
 		return "", err
 
@@ -196,7 +207,16 @@ func GetToBody(url string) (io.ReadCloser, error) {
 		return nil, err
 	}
 
-	return resp.Body, nil
+	read, err := dealBody(resp)
+
+	if err != nil {
+
+		return read, err
+	}
+
+	//body, err := ioutil.ReadAll(read)
+
+	return read, nil
 
 }
 
@@ -244,6 +264,8 @@ func DownloadImage(url string, path string) error {
 	}
 
 	contentType := resp.Header.Get("Content-Type")
+
+	//panic(contentType)
 
 	if !(contentType == "image/jpeg" || contentType == "image/png" || contentType == "image/jpg" || contentType == "image/gif") {
 
@@ -322,4 +344,21 @@ func DownloadFile(url string, path string) error {
 
 	return nil
 
+}
+
+func dealBody(resp *http.Response) (io.ReadCloser, error) {
+
+	r := resp.Body
+
+	var err error
+
+	if resp.Header.Get("Content-Encoding") == "gzip" {
+
+		r, err = gzip.NewReader(resp.Body)
+
+		return r, err
+
+	}
+
+	return r, nil
 }
