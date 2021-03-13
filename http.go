@@ -24,6 +24,11 @@ func Query(url string, method string, setting HttpSetting) (*http.Response, erro
 
 	client := http.Client{}
 
+	if setting.TimeOut == 0 {
+
+		setting.TimeOut = 15
+	}
+
 	client.Timeout = time.Duration(setting.TimeOut) * time.Second
 
 	var req *http.Request
