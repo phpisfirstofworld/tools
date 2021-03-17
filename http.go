@@ -7,6 +7,7 @@ import (
 	"io"
 	"io/ioutil"
 	"net/http"
+	url_ "net/url"
 	"os"
 	"strconv"
 	"strings"
@@ -14,9 +15,10 @@ import (
 )
 
 type HttpSetting struct {
-	TimeOut   int                    //超时时间
-	Header    map[string]string      //header
-	Parameter map[string]interface{} //参数
+	TimeOut      int                    //超时时间
+	Header       map[string]string      //header
+	Parameter    map[string]interface{} //参数
+	ProxyAddress string                 //代理地址
 }
 
 //请求底层函数
@@ -30,6 +32,21 @@ func Query(url string, method string, setting HttpSetting) (*http.Response, erro
 	}
 
 	client.Timeout = time.Duration(setting.TimeOut) * time.Second
+
+	netTransport := &http.Transport{
+		Proxy: func(r *http.Request) (*url_.URL, error) {
+
+			if setting.ProxyAddress != "" {
+
+				return url_.Parse(setting.ProxyAddress)
+
+			}
+
+			return nil, nil
+		},
+	}
+
+	client.Transport = netTransport
 
 	var req *http.Request
 	var err error
@@ -322,7 +339,14 @@ func DownloadFile(url string, path string) error {
 
 	defer f.Close()
 
-	body, _ := GetToBody(url)
+	body, err := GetToBody(url)
+
+	if err != nil {
+
+		//fmt.Println(err)
+
+		return err
+	}
 
 	defer body.Close()
 
