@@ -330,20 +330,30 @@ func DownloadFile(url string, path string, setting HttpSetting) error {
 
 	if err != nil {
 
-		f.Close()
+		//f.Close()
 
 		//panic(err)
 
 		return err
 	}
 
-	defer f.Close()
+	//defer
+
+	defer func() {
+
+		f.Close()
+		//删除临时文件
+		DeleteFile(path + ".temp")
+
+	}()
 
 	body, err := GetToBody(url, setting)
 
 	if err != nil {
 
 		//fmt.Println(err)
+
+		//DeleteFile(path + ".temp")
 
 		return err
 	}

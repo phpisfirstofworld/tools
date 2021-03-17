@@ -30,6 +30,7 @@ func WriteLine(path string, data string) {
 
 }
 
+//删除文件
 func DeleteFile(path string) error {
 
 	err := os.Remove(path)
