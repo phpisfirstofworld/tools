@@ -7,10 +7,10 @@ import (
 
 func main() {
 
-	img := "https://down.925g.com/upload/cms/20210301/1655/193cf532be3661a57d24dc8e100ffecc.png"
+	img := "https://item-shopping.c.yimg.jp/i/n/sakuranokoi_udj008_1"
 
-	err := tools.DownloadFile(img, "image.png", tools.HttpSetting{})
-	//err:=tools.DownloadImage(img, "image.png")
+	//err := tools.DownloadFile(img, "image.png", tools.HttpSetting{})
+	err := tools.DownloadImage(img, "image.png", tools.HttpSetting{})
 
 	fmt.Println(err)
 

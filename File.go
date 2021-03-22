@@ -1,6 +1,7 @@
 package tools
 
 import (
+	"errors"
 	"io/ioutil"
 	"os"
 	"strings"
@@ -55,7 +56,7 @@ func ReadFile(path string) (string, error) {
 }
 
 //获取文件名拓展名
-func GetExtensionName(fileName string) string {
+func GetExtensionName(fileName string) (string, error) {
 
 	index := strings.LastIndexFunc(fileName, func(r rune) bool {
 
@@ -67,7 +68,16 @@ func GetExtensionName(fileName string) string {
 		return false
 	})
 
-	return fileName[index+1:]
+	ex := fileName[index+1:]
+
+	f := strings.Contains(ex, "/")
+
+	if f {
+
+		return "", errors.New("extension is error")
+	}
+
+	return ex, nil
 }
 
 //创建多级文件夹
