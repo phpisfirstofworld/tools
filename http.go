@@ -263,12 +263,19 @@ func DownloadImage(url string, path string, setting HttpSetting) error {
 
 	if err != nil {
 
-		f.Close()
+		//f.Close()
 
 		return err
 	}
 
-	defer f.Close()
+	defer func() {
+
+		f.Close()
+
+		//删除临时文件
+		DeleteFile(path + ".temp")
+
+	}()
 
 	resp, err := GetToResp(url, setting)
 
