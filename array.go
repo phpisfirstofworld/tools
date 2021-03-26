@@ -1,5 +1,7 @@
 package tools
 
+import "strings"
+
 func In_array(array interface{}, item interface{}) bool {
 	switch key := item.(type) {
 	case string:
@@ -24,4 +26,12 @@ func In_array(array interface{}, item interface{}) bool {
 		return false
 	}
 	return false
+}
+
+func Implode(glue string, pieces []string) string {
+	return strings.Join(pieces, glue)
+}
+
+func Join(glue string, pieces []string) string {
+	return strings.Join(pieces, glue)
 }
