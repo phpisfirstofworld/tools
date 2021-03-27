@@ -55,25 +55,29 @@ func Query(url string, method string, setting HttpSetting) (*http.Response, erro
 
 		p := setting.Parameter
 
-		url += "?"
+		if len(p) > 0 {
 
-		for i, v := range p {
+			url += "?"
 
-			switch key := v.(type) {
+			for i, v := range p {
 
-			case string:
+				switch key := v.(type) {
 
-				url += i + "=" + key + "&"
+				case string:
 
-			case int:
+					url += i + "=" + key + "&"
 
-				url += i + "=" + strconv.Itoa(key) + "&"
+				case int:
 
-			case []string:
+					url += i + "=" + strconv.Itoa(key) + "&"
 
-				for _, vv := range key {
+				case []string:
 
-					url += i + "[]=" + vv + "&"
+					for _, vv := range key {
+
+						url += i + "[]=" + vv + "&"
+
+					}
 
 				}
 
