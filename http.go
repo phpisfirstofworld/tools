@@ -33,24 +33,30 @@ func Query(url string, method string, setting HttpSetting) (*http.Response, erro
 
 	client.Timeout = time.Duration(setting.TimeOut) * time.Second
 
-	if setting.ProxyAddress != "" {
+	//if setting.ProxyAddress != "" {
 
-		netTransport := &http.Transport{
-			Proxy: func(r *http.Request) (*url_.URL, error) {
+	netTransport := &http.Transport{
+		Proxy: func(r *http.Request) (*url_.URL, error) {
 
-				if setting.ProxyAddress != "" {
+			if setting.ProxyAddress != "" {
 
-					return url_.Parse(setting.ProxyAddress)
+				return url_.Parse(setting.ProxyAddress)
 
-				}
+			}
 
-				return nil, nil
-			},
-		}
-
-		client.Transport = netTransport
-
+			return nil, nil
+		},
+		DisableKeepAlives:   true,
+		MaxIdleConns:        1000,
+		MaxIdleConnsPerHost: -1,
+		MaxConnsPerHost:     0,
+		IdleConnTimeout:     0,
+		DisableCompression:  true,
 	}
+
+	client.Transport = netTransport
+
+	//}
 
 	var req *http.Request
 	var err error
