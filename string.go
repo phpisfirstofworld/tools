@@ -99,3 +99,13 @@ func ConvertToByte(src string, srcCode string, targetCode string) []byte {
 	_, cdata, _ := tagCoder.Translate([]byte(srcResult), true)
 	return cdata
 }
+
+func SubStr(str string, start int, length int) string {
+
+	if length == -1 {
+
+		return string(([]rune(str))[start:])
+	}
+
+	return string(([]rune(str))[start : start+length])
+}
