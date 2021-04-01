@@ -102,10 +102,19 @@ func ConvertToByte(src string, srcCode string, targetCode string) []byte {
 
 func SubStr(str string, start int, length int) string {
 
+	temp := []rune(str)
+
 	if length == -1 {
 
-		return string(([]rune(str))[start:])
+		return string(temp[start:])
 	}
 
-	return string(([]rune(str))[start : start+length])
+	//panic(len(temp))
+
+	if start+length > len(temp) {
+
+		return string(temp[start:])
+	}
+
+	return string(temp[start : start+length])
 }
