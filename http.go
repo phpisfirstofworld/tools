@@ -353,35 +353,46 @@ func DownloadFile(url string, path string, setting HttpSetting) error {
 
 		//f.Close()
 
-		//panic(err)
-
 		return err
 	}
-
-	//defer
 
 	defer func() {
 
 		f.Close()
+
 		//删除临时文件
 		DeleteFile(path + ".temp")
 
 	}()
 
-	body, err := GetToBody(url, setting)
+	resp, err := GetToResp(url, setting)
 
 	if err != nil {
-
-		//fmt.Println(err)
-
-		//DeleteFile(path + ".temp")
 
 		return err
 	}
 
-	defer body.Close()
+	defer resp.Body.Close()
 
-	_, err = io.Copy(f, body)
+	if resp.StatusCode == 404 {
+
+		return errors.New("404")
+
+	}
+
+	//contentType := resp.Header.Get("Content-Type")
+	//
+	////panic(contentType)
+	//
+	//if !(contentType == "image/jpeg" || contentType == "image/png" || contentType == "image/jpg" || contentType == "image/gif") {
+	//
+	//	//panic("图片类型错误")
+	//
+	//	return errors.New("图片类型错误")
+	//
+	//}
+
+	_, err = io.Copy(f, resp.Body)
 
 	if err != nil {
 
@@ -393,6 +404,7 @@ func DownloadFile(url string, path string, setting HttpSetting) error {
 
 	}
 
+	//释放文件占用
 	f.Close()
 
 	if err = os.Rename(path+".temp", path); err != nil {
