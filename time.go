@@ -71,6 +71,10 @@ func Date(format string, timestamp int64) string {
 	case "Hi":
 		f = "1504"
 
+	case "md":
+
+		f = "0102"
+
 	}
 
 	return t.Format(f)
