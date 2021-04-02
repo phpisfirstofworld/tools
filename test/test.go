@@ -7,7 +7,7 @@ import (
 
 func main() {
 
-	re, _ := tools.GetWithString("https://github.com")
+	re, _ := tools.GetToString("https://github.com", tools.HttpSetting{})
 
 	fmt.Println(re)
 	fmt.Println(re)
