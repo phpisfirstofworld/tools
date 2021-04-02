@@ -7,75 +7,21 @@ import (
 	"time"
 )
 
-//先用比较蠢的办法
+//时间格式函数
 func Date(format string, timestamp int64) string {
 
 	//去空格
 	format = strings.Trim(format, " ")
 
 	t := time.Unix(timestamp, 0)
-
-	f := "2006-01-02 15:04:05"
-
-	switch format {
-
-	case "Y-m-d":
-
-		f = "2006-01-02"
-
-	case "Y/m/d":
-
-		f = "2006/01/02"
-
-	case "Y-m":
-
-		f = "2006-01"
-
-	case "Y/m":
-
-		f = "2006-01"
-
-	case "m-d":
-
-		f = "01-02"
-
-	case "m/d":
-		f = "01/02"
-
-	case "H:i:s":
-
-		f = "15:04:05"
-
-	case "H:i":
-
-		f = "15:04"
-
-	case "Y-m-d H:i":
-
-		f = "2006-01-02 15:04"
-
-	case "Y/m/d H:i":
-
-		f = "2006/01/02 15:04"
-	case "Y":
-
-		f = "2006"
-	case "Ym":
-
-		f = "200601"
-	case "Ymd":
-
-		f = "20060102"
-	case "H":
-		f = "15"
-	case "Hi":
-		f = "1504"
-
-	case "md":
-
-		f = "0102"
-
-	}
+	//f := "2006-01-02 15:04:05"
+	f := strings.Replace(format, "Y", "2006", -1)
+	f = strings.Replace(f, "m", "01", -1)
+	f = strings.Replace(f, "d", "02", -1)
+	f = strings.Replace(f, "H", "15", -1)
+	f = strings.Replace(f, "i", "04", -1)
+	f = strings.Replace(f, "s", "05", -1)
+	f = strings.Replace(f, "w", "Monday", -1)
 
 	return t.Format(f)
 

@@ -22,4 +22,6 @@ func main() {
 	fmt.Println(tools.StrToTime("2020-12-12 11:32:00"))
 	fmt.Println(tools.StrToTime("2020/12/12 11:32:00"))
 
+	//fmt.Println(time.Unix(time.Now().Unix(),0).Format(""))
+
 }
