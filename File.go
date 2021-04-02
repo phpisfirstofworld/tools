@@ -96,7 +96,7 @@ func MkDirDepth(path string) error {
 
 		currentPath = currentPath + v + "/"
 
-		err := os.Mkdir(currentPath, 0644)
+		err := os.Mkdir(currentPath, 0755)
 
 		if err != nil && err.Error() != "mkdir "+currentPath+": Cannot create a file when that file already exists." {
 
