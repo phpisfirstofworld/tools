@@ -107,6 +107,7 @@ fmt.Println(html)
 ```
 
 <br/>
+<br/>
 
 **2.时间处理**
 
@@ -129,4 +130,42 @@ tools.StrToTime("2020/12/12 11:32:00")
 
 
 ```
+
+
+<br/>
+<br/>
+
+**3.数组操作**
+
+```
+
+//in_array
+array := []string{"1", "2", "3", "4"}
+
+b := tools.InArray(array, "4")
+
+println(b)
+
+array2 := []int{1, 2, 3, 4}
+
+b2 := tools.InArray(array2, 4)
+
+println(b2)
+
+
+
+
+//implode
+
+arr:=[]string{"1","2","3"}
+
+fmt.Println(tools.Implode("-",arr))
+
+
+
+```
+
+
+
+
 
