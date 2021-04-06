@@ -25,6 +25,7 @@ fmt.Println(str)
 
 //携带参数
 p := map[string]interface{}{"name": []string{"123", "456"}, "age": 1, "nickname": "123"}
+
 str, err := tools.GetToString("http://www.baidu.com",tools.HttpSetting{Parameter: p})
 
 if err != nil {
@@ -37,6 +38,7 @@ fmt.Println(str)
 
 //post
 p := map[string]interface{}{"name": []string{"123", "456"}, "age": 1, "nickname": "123"}
+
 str, err := tools.PostToString("http://www.baidu.com",tools.HttpSetting{Parameter: p})
 
 if err != nil {
