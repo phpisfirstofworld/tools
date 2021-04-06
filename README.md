@@ -12,7 +12,7 @@ go get github.com/PeterYangs/tools
 
 ```
 //get请求
-str, err := tools.GetToString("http://www.baidu.com")
+str, err := tools.GetToString("http://www.baidu.com",tools.HttpSetting{})
 
 if err != nil {
 
