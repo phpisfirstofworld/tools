@@ -104,6 +104,10 @@ if err != nil {
 fmt.Println(html)
 
 
+//超时设置
+tools.GetToString("https://www.baidu.com",tools.HttpSetting{TimeOut: 10})
+
+
 ```
 
 <br/>
