@@ -1,6 +1,6 @@
 # tools
-go的工具集
 
+go的工具集
 
 **安装**
 
@@ -131,7 +131,6 @@ tools.StrToTime("2020/12/12 11:32:00")
 
 ```
 
-
 <br/>
 <br/>
 
@@ -165,7 +164,67 @@ fmt.Println(tools.Implode("-",arr))
 
 ```
 
+<br/>
+<br/>
+
+**4.文件操作**
+
+```
+
+//读取文件
+data, err :=tools.ReadFile("http.go")
 
 
 
+
+//创建多级文件夹
+path := "a/b/c/"
+
+tools.MkDirDepth(path)
+
+
+
+
+
+//获取文件拓展名
+name := "1212.png"
+
+f1, _ := tools.GetExtensionName(name)
+
+fmt.Println(f1)
+
+
+```
+
+<br/>
+<br/>
+
+**5.字符串操作**
+
+```
+
+//explode
+str:="1,2,3"
+
+fmt.Println(tools.Explode(",",str))
+
+
+
+
+//md5
+str := "123"
+
+fmt.Println(tools.Md5(str))
+
+
+
+
+//字符串截取
+str := "我尼玛"
+
+tools.SubStr(str, 1, 4)
+
+
+
+```
 
