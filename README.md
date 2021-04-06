@@ -106,3 +106,26 @@ fmt.Println(html)
 
 ```
 
+
+**2.时间处理**
+
+```
+//时间戳转时间格式，目前仅支持Y、m、d、H、i、s、w
+tools.Date("Y-m-d", time.Now().Unix())
+tools.Date("Y-m-d H:i:s", time.Now().Unix()))
+tools.Date("Y-m-d H:i", time.Now().Unix())
+tools.Date("Y", time.Now().Unix())
+tools.Date("Ym", time.Now().Unix()))
+tools.Date("Ymd", time.Now().Unix()))
+tools.Date("H", time.Now().Unix()))
+tools.Date("Hi", time.Now().Unix()))
+
+//时间格式转时间戳，单位秒
+tools.StrToTime("2020/12/12")
+tools.StrToTime("2020-12-12")
+tools.StrToTime("2020-12-12 11:32:00")
+tools.StrToTime("2020/12/12 11:32:00")
+
+
+```
+
