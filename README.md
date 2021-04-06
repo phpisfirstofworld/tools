@@ -226,7 +226,8 @@ fmt.Println(tools.Md5(str))
 //字符串截取
 str := "我尼玛"
 
-tools.SubStr(str, 1, 4)
+tools.SubStr(str, 1, 1)
+tools.SubStr(str, 1, -1)
 
 
 
