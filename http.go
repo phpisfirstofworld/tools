@@ -21,7 +21,7 @@ type HttpSetting struct {
 	ProxyAddress string                 //代理地址
 }
 
-//请求底层函数
+// Query 请求底层函数
 func Query(url string, method string, setting HttpSetting) (*http.Response, error) {
 
 	client := http.Client{}
@@ -171,7 +171,7 @@ func Query(url string, method string, setting HttpSetting) (*http.Response, erro
 
 }
 
-//get获取字符串结果
+// GetToString get获取字符串结果
 func GetToString(url string, setting HttpSetting) (string, error) {
 
 	resp, err := Query(url, "GET", setting)
@@ -202,7 +202,40 @@ func GetToString(url string, setting HttpSetting) (string, error) {
 
 }
 
-//post获取字符串结果
+// GetToStringWithHeader  get获取字符串结果并返回头部信息
+func GetToStringWithHeader(url string, setting HttpSetting) (string, http.Header, error) {
+
+	resp, err := Query(url, "GET", setting)
+
+	if err != nil {
+
+		return "", nil, err
+	}
+
+	defer resp.Body.Close()
+
+	//resp.Header.Values()
+
+	read, err := dealBody(resp)
+
+	if err != nil {
+
+		return "", nil, err
+	}
+
+	body, err := ioutil.ReadAll(read)
+
+	if err != nil {
+
+		return "", nil, err
+
+	}
+
+	return string(body), resp.Header, nil
+
+}
+
+// PostToString post获取字符串结果
 func PostToString(url string, setting HttpSetting) (string, error) {
 
 	resp, err := Query(url, "POST", setting)
@@ -233,7 +266,7 @@ func PostToString(url string, setting HttpSetting) (string, error) {
 
 }
 
-//注意要手动关闭body
+// GetToBody 注意要手动关闭body
 func GetToBody(url string, setting HttpSetting) (io.ReadCloser, error) {
 
 	resp, err := Query(url, "GET", setting)
@@ -256,7 +289,7 @@ func GetToBody(url string, setting HttpSetting) (io.ReadCloser, error) {
 
 }
 
-//注意要手动关闭body
+// GetToResp 注意要手动关闭body
 func GetToResp(url string, setting HttpSetting) (*http.Response, error) {
 
 	resp, err := Query(url, "GET", setting)
@@ -270,7 +303,7 @@ func GetToResp(url string, setting HttpSetting) (*http.Response, error) {
 
 }
 
-//图片下载
+// DownloadImage 图片下载
 func DownloadImage(url string, path string, setting HttpSetting) error {
 
 	f, err := os.Create(path + ".temp")
@@ -344,7 +377,7 @@ func DownloadImage(url string, path string, setting HttpSetting) error {
 
 }
 
-//下载文件
+// DownloadFile 下载文件
 func DownloadFile(url string, path string, setting HttpSetting) error {
 
 	f, err := os.Create(path + ".temp")
