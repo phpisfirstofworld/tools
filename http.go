@@ -407,9 +407,9 @@ func DownloadFile(url string, path string, setting HttpSetting) error {
 
 	defer resp.Body.Close()
 
-	if resp.StatusCode == 404 {
+	if resp.StatusCode != 200 {
 
-		return errors.New("404")
+		return errors.New("file " + strconv.Itoa(resp.StatusCode))
 
 	}
 
