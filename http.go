@@ -409,7 +409,7 @@ func DownloadFile(url string, path string, setting HttpSetting) error {
 
 	if resp.StatusCode != 200 {
 
-		return errors.New("file " + strconv.Itoa(resp.StatusCode))
+		return errors.New("http code : " + strconv.Itoa(resp.StatusCode) + ",link:" + url)
 
 	}
 
