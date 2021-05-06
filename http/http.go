@@ -4,6 +4,7 @@ import (
 	"compress/gzip"
 	"io"
 	"io/ioutil"
+	"net"
 	"net/http"
 	url_ "net/url"
 	"strconv"
@@ -23,7 +24,12 @@ type HttpSetting struct {
 	ProxyAddress string                 //代理地址
 }
 
-func Client(setting HttpSetting) HttpClient {
+func Client(setting HttpSetting) *HttpClient {
+
+	//http.DefaultTransport.(http.Transport).MaxIdleConnsPerHost = 1000
+	//http.DefaultTransport.(http.Transport).MaxIdleConns = 1000
+
+	//http.DefaultTransport.(http.Transport).MaxIdleConnsPerHost=1000
 
 	client := http.Client{}
 
@@ -37,32 +43,55 @@ func Client(setting HttpSetting) HttpClient {
 	//if setting.ProxyAddress != "" {
 
 	netTransport := &http.Transport{
-		Proxy: func(r *http.Request) (*url_.URL, error) {
-
-			if setting.ProxyAddress != "" {
-
-				return url_.Parse(setting.ProxyAddress)
-
-			}
-
-			return nil, nil
-		},
-		DisableKeepAlives: true,
-		MaxIdleConns:      100,
-		//MaxIdleConnsPerHost:100,
+		//Proxy: func(r *http.Request) (*url_.URL, error) {
+		//
+		//	if setting.ProxyAddress != "" {
+		//
+		//		return url_.Parse(setting.ProxyAddress)
+		//
+		//	}
+		//
+		//	return nil, nil
+		//},
+		DialContext: (&net.Dialer{
+			Timeout:   30 * time.Second,
+			KeepAlive: 30 * time.Second,
+			DualStack: true,
+		}).DialContext,
 		MaxIdleConnsPerHost:   100,
+		MaxIdleConns:          100,
 		IdleConnTimeout:       90 * time.Second,
 		TLSHandshakeTimeout:   10 * time.Second,
 		ExpectContinueTimeout: 1 * time.Second,
 	}
 
+	if setting.ProxyAddress != "" {
+
+		netTransport.Proxy = func(request *http.Request) (*url_.URL, error) {
+
+			return url_.Parse(setting.ProxyAddress)
+		}
+
+	}
+
+	//defaultRoundTripper := http.DefaultTransport
+	//defaultTransportPointer, ok := defaultRoundTripper.(*http.Transport)
+	//if !ok {
+	//	panic(fmt.Sprintf("defaultRoundTripper not an *http.Transport"))
+	//}
+	//defaultTransport := *defaultTransportPointer // dereference it to get a copy of the struct that the pointer points to
+	//defaultTransport.MaxIdleConns = 100
+	//defaultTransport.MaxIdleConnsPerHost = 100
+	////defaultTransport.Proxy
+	//
+	//client.Transport = &defaultTransport
 	client.Transport = netTransport
 
 	h := HttpClient{}
 
 	h.client = &client
 
-	return h
+	return &h
 
 }
 
