@@ -48,7 +48,7 @@ func Client(setting HttpSetting) HttpClient {
 			return nil, nil
 		},
 		DisableKeepAlives:   true,
-		MaxIdleConns:        1000,
+		MaxIdleConns:        100,
 		MaxIdleConnsPerHost: -1,
 		MaxConnsPerHost:     0,
 		IdleConnTimeout:     0,
