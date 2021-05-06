@@ -12,7 +12,7 @@ import (
 )
 
 type HttpClient struct {
-	client      http.Client
+	client      *http.Client
 	httpSetting HttpSetting
 }
 
@@ -50,17 +50,17 @@ func Client(setting HttpSetting) HttpClient {
 		DisableKeepAlives: true,
 		MaxIdleConns:      100,
 		//MaxIdleConnsPerHost:100,
-		MaxIdleConnsPerHost: 100,
-		MaxConnsPerHost:     0,
-		IdleConnTimeout:     0,
-		DisableCompression:  true,
+		MaxIdleConnsPerHost:   100,
+		IdleConnTimeout:       90 * time.Second,
+		TLSHandshakeTimeout:   10 * time.Second,
+		ExpectContinueTimeout: 1 * time.Second,
 	}
 
 	client.Transport = netTransport
 
 	h := HttpClient{}
 
-	h.client = client
+	h.client = &client
 
 	return h
 
