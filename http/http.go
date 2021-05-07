@@ -101,7 +101,7 @@ func (r R) SetParameter(p map[string]interface{}) R {
 //获取Response
 func getResponse(r R, method string, url string) (*http.Response, error) {
 
-	var req *http.Request
+	var req = r.Request
 	var err error
 
 	//setting := h.httpSetting
@@ -193,12 +193,12 @@ func getResponse(r R, method string, url string) (*http.Response, error) {
 
 	}
 
-	//设置头部
-	for i, v := range r.Header {
-
-		req.Header.Add(i, v)
-
-	}
+	////设置头部
+	//for i, v := range r.Header {
+	//
+	//	req.Header.Add(i, v)
+	//
+	//}
 
 	resp, err := r.client.Do(req)
 
@@ -214,7 +214,19 @@ func getResponse(r R, method string, url string) (*http.Response, error) {
 
 func (c C) Request() R {
 
-	return R{client: c.client}
+	return R{client: c.client, Request: &http.Request{}}
+}
+
+func (r R) SetHeader(header map[string]string) R {
+
+	//设置头部
+	for i, v := range header {
+
+		r.Request.Header.Add(i, v)
+
+	}
+
+	return r
 }
 
 func (r R) GetToString(url string) (string, error) {
