@@ -59,6 +59,9 @@ func Client() *C {
 
 	c.client = &client
 
+	//默认超时时间
+	c.client.Timeout = 15 * time.Second
+
 	return c
 
 }
