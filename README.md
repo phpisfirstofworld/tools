@@ -37,9 +37,11 @@ str, err := client.SetTimeout(1 * time.Second).Request().SetParameter(p).GetToSt
 
 //自定义header
 header := map[string]string{"user-agent": "Iphone100"}
-	
-client:=http.Client()
-	
+
+//添加全局header	
+client:=http.Client().SetHeader(header)
+
+//局部header	
 re, err :=client.Request().SetHeader(header).GetToString("http://list.com/pass/header.php")
 
 

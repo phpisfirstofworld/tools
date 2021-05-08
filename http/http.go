@@ -19,13 +19,14 @@ import (
 type C struct {
 	client    *http.Client
 	Transport *http.Transport
+	Header    map[string]string //全局头部
 }
 
 // R request构造体
 type R struct {
 	Request   *http.Request
 	Parameter map[string]interface{} //参数
-	client    *http.Client
+	c         *C
 	Header    map[string]string //header
 
 }
@@ -87,9 +88,17 @@ func (c *C) SetProxyAddress(address string) *C {
 
 }
 
+// SetHeader 设置全局header
+func (c *C) SetHeader(header map[string]string) *C {
+
+	c.Header = header
+
+	return c
+}
+
 func (c *C) Request() *R {
 
-	return &R{client: c.client, Request: &http.Request{}}
+	return &R{c: c, Request: &http.Request{}}
 }
 
 // SetHeader 设置header
@@ -201,13 +210,26 @@ func getResponse(r *R, method string, url string) (*http.Response, error) {
 
 	}
 
-	//设置头部
-	for i, v := range r.Header {
+	var finalHeader = make(map[string]string)
 
-		req.Header.Add(i, v)
+	//设置全局头部
+	for i, v := range r.c.Header {
+
+		finalHeader[i] = v
 	}
 
-	resp, err := r.client.Do(req)
+	//设置request头部,request中设置的header会覆盖全局header
+	for i, v := range r.Header {
+
+		finalHeader[i] = v
+	}
+
+	for s, s2 := range finalHeader {
+
+		req.Header.Add(s, s2)
+	}
+
+	resp, err := r.c.client.Do(req)
 
 	if err != nil {
 
