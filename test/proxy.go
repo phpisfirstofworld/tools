@@ -2,18 +2,16 @@ package main
 
 import (
 	"fmt"
-	"github.com/PeterYangs/tools"
+	"github.com/PeterYangs/tools/http"
 )
 
 func main() {
 
-	url := "https://www.google.com/"
-	//url := "https://www.baidu.com"
+	client := http.Client()
 
-	html, err := tools.GetToString(url, tools.HttpSetting{
-		//ProxyAddress: "http://127.0.0.1:4780",
-		ProxyAddress: "socks5://127.0.0.1:4781",
-	})
+	client.SetProxyAddress("http://127.0.0.1:4780")
+
+	html, err := client.Request().GetToString("https://www.google.com/")
 
 	if err != nil {
 

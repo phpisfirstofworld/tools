@@ -15,14 +15,10 @@ import (
 	"time"
 )
 
+// C 客户端结构体
 type C struct {
-	client      *http.Client
-	httpSetting Setting
-}
-
-type Setting struct {
-	TimeOut      time.Duration //超时时间
-	ProxyAddress string        //代理地址
+	client    *http.Client
+	Transport *http.Transport
 }
 
 // R request构造体
@@ -37,16 +33,9 @@ type R struct {
 //client->request->do
 
 // Client 获取客户端
-func Client(setting Setting) *C {
+func Client() *C {
 
 	client := http.Client{}
-
-	if setting.TimeOut == 0 {
-
-		setting.TimeOut = 15 * time.Second
-	}
-
-	client.Timeout = setting.TimeOut
 
 	netTransport := &http.Transport{
 
@@ -62,27 +51,20 @@ func Client(setting Setting) *C {
 		ExpectContinueTimeout: 1 * time.Second,
 	}
 
-	if setting.ProxyAddress != "" {
-
-		netTransport.Proxy = func(request *http.Request) (*url_.URL, error) {
-
-			return url_.Parse(setting.ProxyAddress)
-		}
-
-	}
-
 	client.Transport = netTransport
 
-	c := C{}
+	c := &C{}
+
+	c.Transport = netTransport
 
 	c.client = &client
 
-	return &c
+	return c
 
 }
 
 // SetTimeout 设置超时时间
-func (c C) SetTimeout(time time.Duration) C {
+func (c *C) SetTimeout(time time.Duration) *C {
 
 	c.client.Timeout = time
 
@@ -90,8 +72,33 @@ func (c C) SetTimeout(time time.Duration) C {
 
 }
 
+// SetProxyAddress 设置代理地址
+func (c *C) SetProxyAddress(address string) *C {
+
+	c.Transport.Proxy = func(request *http.Request) (*url_.URL, error) {
+
+		return url_.Parse(address)
+	}
+
+	return c
+
+}
+
+func (c *C) Request() *R {
+
+	return &R{client: c.client, Request: &http.Request{}}
+}
+
+// SetHeader 设置header
+func (r *R) SetHeader(header map[string]string) *R {
+
+	r.Header = header
+
+	return r
+}
+
 // SetParameter 设置请求参数
-func (r R) SetParameter(p map[string]interface{}) R {
+func (r *R) SetParameter(p map[string]interface{}) *R {
 
 	r.Parameter = p
 
@@ -99,12 +106,10 @@ func (r R) SetParameter(p map[string]interface{}) R {
 }
 
 //获取Response
-func getResponse(r R, method string, url string) (*http.Response, error) {
+func getResponse(r *R, method string, url string) (*http.Response, error) {
 
 	var req = r.Request
 	var err error
-
-	//setting := h.httpSetting
 
 	if method == "GET" {
 
@@ -193,12 +198,11 @@ func getResponse(r R, method string, url string) (*http.Response, error) {
 
 	}
 
-	////设置头部
-	//for i, v := range r.Header {
-	//
-	//	req.Header.Add(i, v)
-	//
-	//}
+	//设置头部
+	for i, v := range r.Header {
+
+		req.Header.Add(i, v)
+	}
 
 	resp, err := r.client.Do(req)
 
@@ -212,26 +216,7 @@ func getResponse(r R, method string, url string) (*http.Response, error) {
 
 }
 
-func (c C) Request() R {
-
-	return R{client: c.client, Request: &http.Request{}}
-}
-
-func (r R) SetHeader(header map[string]string) R {
-
-	//设置头部
-	for i, v := range header {
-
-		r.Request.Header.Add(i, v)
-
-	}
-
-	return r
-}
-
-func (r R) GetToString(url string) (string, error) {
-
-	//resp, err := Query(url, "GET", setting)
+func (r *R) GetToString(url string) (string, error) {
 
 	resp, err := getResponse(r, "GET", url)
 
@@ -262,7 +247,7 @@ func (r R) GetToString(url string) (string, error) {
 }
 
 // GetToStringWithHeader  get获取字符串结果并返回头部信息
-func (r R) GetToStringWithHeader(url string) (string, http.Header, error) {
+func (r *R) GetToStringWithHeader(url string) (string, http.Header, error) {
 
 	resp, err := getResponse(r, "GET", url)
 
@@ -272,8 +257,6 @@ func (r R) GetToStringWithHeader(url string) (string, http.Header, error) {
 	}
 
 	defer resp.Body.Close()
-
-	//resp.Header.Values()
 
 	read, err := dealBody(resp)
 
@@ -295,7 +278,7 @@ func (r R) GetToStringWithHeader(url string) (string, http.Header, error) {
 }
 
 // PostToString post获取字符串结果
-func (r R) PostToString(url string) (string, error) {
+func (r *R) PostToString(url string) (string, error) {
 
 	resp, err := getResponse(r, "POST", url)
 
@@ -343,7 +326,7 @@ func dealBody(resp *http.Response) (io.ReadCloser, error) {
 }
 
 // GetToBody 注意要手动关闭body
-func (r R) GetToBody(url string) (io.ReadCloser, error) {
+func (r *R) GetToBody(url string) (io.ReadCloser, error) {
 
 	resp, err := getResponse(r, "POST", url)
 
@@ -364,7 +347,7 @@ func (r R) GetToBody(url string) (io.ReadCloser, error) {
 }
 
 // GetToResp 注意要手动关闭body
-func (r R) GetToResp(url string) (*http.Response, error) {
+func (r *R) GetToResp(url string) (*http.Response, error) {
 
 	resp, err := getResponse(r, "GET", url)
 
@@ -378,7 +361,7 @@ func (r R) GetToResp(url string) (*http.Response, error) {
 }
 
 // DownloadImage 图片下载
-func (r R) DownloadImage(url string, path string) error {
+func (r *R) DownloadImage(url string, path string) error {
 
 	f, err := os.Create(path + ".temp")
 
@@ -452,7 +435,7 @@ func (r R) DownloadImage(url string, path string) error {
 }
 
 // DownloadFile 下载文件
-func (r R) DownloadFile(url string, path string) error {
+func (r *R) DownloadFile(url string, path string) error {
 
 	f, err := os.Create(path + ".temp")
 

@@ -7,7 +7,7 @@ import (
 
 func main() {
 
-	client := http.Client(http.Setting{})
+	client := http.Client()
 
 	//p := map[string]interface{}{"name": []string{"123", "456"}, "age": 1, "nickname": "123"}
 

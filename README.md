@@ -18,7 +18,7 @@ go get github.com/PeterYangs/tools
 import "github.com/PeterYangs/tools/http"
 
 //获取客户端
-client := http.Client(http.Setting{})
+client := http.Client()
 
 //get请求
 str, err := client.Request().GetToString("https://www.baidu.com")
@@ -36,13 +36,27 @@ str, err := client.SetTimeout(1 * time.Second).Request().SetParameter(p).GetToSt
 
 
 //自定义header
-header:=map[string]string{"user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.121 Safari/537.36"}
+header := map[string]string{"user-agent": "Iphone100"}
+	
+client:=http.Client()
+	
+re, err :=client.Request().SetHeader(header).GetToString("http://list.com/pass/header.php")
 
-str, err := client.SetTimeout(1 * time.Second).Request().SetHeader(header).GetToString("https://www.google.com/")
+
+//proxy
+client := http.Client()
+
+client.SetProxyAddress("http://127.0.0.1:4780")
+
+html, err := client.Request().GetToString("https://www.google.com/")
 
 
+//timeout
+client := http.Client()
 
+client.SetTimeout(1*time.Second)
 
+html, err := client.Request().GetToString("https://www.google.com/")
 
 
 ```

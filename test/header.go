@@ -1,11 +1,27 @@
 package main
 
-import "github.com/PeterYangs/tools"
+import (
+	"fmt"
+	"github.com/PeterYangs/tools/http"
+)
 
 func main() {
 
-	header := map[string]string{"user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.121 Safari/537.36"}
+	header := map[string]string{"user-agent": "Iphone100"}
 
-	tools.GetToString("https://www.baidu.com", tools.HttpSetting{Header: header})
+	p := map[string]interface{}{"name": []string{"123", "456"}, "age": 1, "nickname": "123"}
+
+	client := http.Client()
+
+	re, err := client.Request().SetHeader(header).SetParameter(p).PostToString("http://list.com/pass/post.php")
+
+	if err != nil {
+
+		fmt.Println(err)
+
+		return
+	}
+
+	fmt.Println(re)
 
 }
