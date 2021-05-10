@@ -61,6 +61,10 @@ client.SetTimeout(1*time.Second)
 html, err := client.Request().GetToString("https://www.google.com/")
 
 
+//重试次数，默认为0
+html,err:=client.Request().SetReTryTimes(3).GetToString("https://xxxccaacasdad.com")
+
+
 ```
 
 

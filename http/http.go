@@ -24,11 +24,11 @@ type C struct {
 
 // R request构造体
 type R struct {
-	Request   *http.Request
-	Parameter map[string]interface{} //参数
-	c         *C
-	Header    map[string]string //header
-
+	Request    *http.Request
+	Parameter  map[string]interface{} //参数
+	c          *C
+	Header     map[string]string //header
+	ReTryTimes int               //重试次数
 }
 
 //client->request->do
@@ -98,7 +98,7 @@ func (c *C) SetHeader(header map[string]string) *C {
 
 func (c *C) Request() *R {
 
-	return &R{c: c, Request: &http.Request{}}
+	return &R{c: c, Request: &http.Request{}, ReTryTimes: 0}
 }
 
 // SetHeader 设置header
@@ -113,6 +113,19 @@ func (r *R) SetHeader(header map[string]string) *R {
 func (r *R) SetParameter(p map[string]interface{}) *R {
 
 	r.Parameter = p
+
+	return r
+}
+
+// SetReTryTimes 设置重试次数
+func (r *R) SetReTryTimes(times int) *R {
+
+	if times < 0 {
+
+		times = 0
+	}
+
+	r.ReTryTimes = times
 
 	return r
 }
@@ -229,12 +242,27 @@ func getResponse(r *R, method string, url string) (*http.Response, error) {
 		req.Header.Add(s, s2)
 	}
 
-	resp, err := r.c.client.Do(req)
+	var resp *http.Response
+	var e error
 
-	if err != nil {
+	for i := 0; i < r.ReTryTimes+1; i++ {
 
-		return resp, err
+		resp, e = r.c.client.Do(req)
 
+		if e != nil {
+
+			//fmt.Println("retry ",i+1)
+
+			continue
+		}
+
+		break
+
+	}
+
+	if e != nil {
+
+		return resp, e
 	}
 
 	return resp, nil
