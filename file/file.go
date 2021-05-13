@@ -58,7 +58,7 @@ func ReadFileToByte(path string, bufSize int, callback func([]byte)) error {
 // OpenFileWithAPPEND 追加打开文件（别忘了关闭文件）
 func OpenFileWithAPPEND(path string) (*os.File, error) {
 
-	f, e := os.OpenFile("xx.txt", os.O_CREATE|os.O_APPEND|os.O_EXCL, 0644)
+	f, e := os.OpenFile(path, os.O_CREATE|os.O_APPEND|os.O_EXCL, 0644)
 
 	if e != nil {
 
