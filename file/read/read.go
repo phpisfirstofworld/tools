@@ -73,6 +73,8 @@ func (file *File) ReadBlock(bufSize int, callback func([]byte)) error {
 		return file.openError
 	}
 
+	defer file.file.Close()
+
 	//缓冲字节
 	buf := make([]byte, bufSize)
 
