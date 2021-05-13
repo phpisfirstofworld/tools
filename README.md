@@ -133,27 +133,40 @@ fmt.Println(tools.Implode("-",arr))
 
 ```
 
-//读取文件
-data, err :=tools.ReadFile("http.go")
+//写入文件
+file:=write.Open("test.txt")
+
+file.Write([]byte("hello"))
+
+file.Close()
 
 
+//追加写入
+
+f:=write.OpenAppend("test.txt")
+
+for i := 0; i < 10; i++ {
+
+    err:=f.Write([]byte("hello\n"))
+
+    if err != nil {
+
+        fmt.Println(err)
+
+        return
+    }
+
+}
+
+f.Close()
+
+//文件读取
+s,err:=read.Open("LICENSE").Read()
 
 
-//创建多级文件夹
-path := "a/b/c/"
+//分块读取
+err:=read.Open("LICENSE").ReadBlock(1024,func(b []byte){})
 
-tools.MkDirDepth(path)
-
-
-
-
-
-//获取文件拓展名
-name := "1212.png"
-
-f1, _ := tools.GetExtensionName(name)
-
-fmt.Println(f1)
 
 
 ```
