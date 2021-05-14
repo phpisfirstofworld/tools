@@ -78,7 +78,23 @@ func (file *File) GetFile() (*os.File, error) {
 	return file.file, nil
 }
 
+//数据写入
 func (file *File) Write(data []byte) error {
+
+	if file.openError != nil {
+
+		return file.openError
+	}
+
+	defer file.file.Close()
+
+	_, err := file.file.Write(data)
+
+	return err
+}
+
+// WriteNotClose 不关闭写入
+func (file *File) WriteNotClose(data []byte) error {
 
 	if file.openError != nil {
 

@@ -138,16 +138,14 @@ file:=write.Open("test.txt")
 
 file.Write([]byte("hello"))
 
-file.Close()
 
 
 //追加写入
-
 f:=write.OpenAppend("test.txt")
 
 for i := 0; i < 10; i++ {
 
-    err:=f.Write([]byte("hello\n"))
+    err:=f.WriteNotClose([]byte("hello\n"))
 
     if err != nil {
 
@@ -159,6 +157,9 @@ for i := 0; i < 10; i++ {
 }
 
 f.Close()
+
+
+
 
 //文件读取
 s,err:=read.Open("LICENSE").Read()
