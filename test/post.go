@@ -3,24 +3,42 @@ package main
 import (
 	"fmt"
 	"github.com/PeterYangs/tools/http"
-	"time"
 )
 
 func main() {
 
-	client := http.Client(http.Setting{})
+	//获取客户端
+	client := http.Client()
 
-	header := map[string]string{"user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.121 Safari/537.36"}
-
-	str, err := client.SetTimeout(1 * time.Second).Request().SetHeader(header).GetToString("https://www.google.com/")
-
-	if err != nil {
-
-		fmt.Println(err)
-
-		return
+	//携带参数
+	p := map[string]interface{}{
+		"name":     []string{"123", "456"},
+		"age":      1,
+		"nickname": "123",
+		"form": map[string]interface{}{
+			"one":   "1",
+			"two":   "2",
+			"three": []string{"123", "456"},
+			"four": map[string]interface{}{
+				"one": "1",
+				"two": "2",
+			},
+		},
 	}
 
-	fmt.Print(str)
+	for i := 0; i < 2; i++ {
+
+		str, err := client.Request().SetParameter(p).GetToString("http://list.com/pass/get.php")
+
+		if err != nil {
+
+			fmt.Println(err)
+
+			return
+		}
+
+		fmt.Println(str)
+
+	}
 
 }
