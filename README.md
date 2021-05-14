@@ -34,6 +34,25 @@ p := map[string]interface{}{"name": []string{"123", "456"}, "age": 1, "nickname"
 str, err := client.SetTimeout(1 * time.Second).Request().SetParameter(p).GetToString("https://www.google.com/")
 
 
+//复杂参数
+p := map[string]interface{}{
+		"name":     []string{"123", "456"},
+		"age":      1,
+		"nickname": "123",
+		"form": map[string]interface{}{
+			"one":   "1",
+			"two":   "2",
+			"three": []string{"123", "456"},
+			"four": map[string]interface{}{
+				"one": "1",
+				"two": "2",
+			},
+		},
+	}
+	
+client.Request().SetParameter(p).GetToString("http://list.com/pass/get.php")
+	
+
 
 //自定义header
 header := map[string]string{"user-agent": "Iphone100"}

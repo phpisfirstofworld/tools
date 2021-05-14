@@ -144,30 +144,13 @@ func getResponse(r *R, method string, url string) (*http.Response, error) {
 
 			url += "?"
 
-			for i, v := range p {
+			url = resolveInterface(p, url, []string{})
 
-				switch key := v.(type) {
+		}
 
-				case string:
+		if tools.SubStr(url, len(url)-1, -1) == "&" {
 
-					url += i + "=" + key + "&"
-
-				case int:
-
-					url += i + "=" + strconv.Itoa(key) + "&"
-
-				case []string:
-
-					for _, vv := range key {
-
-						url += i + "[]=" + vv + "&"
-
-					}
-
-				}
-
-			}
-
+			url = tools.SubStr(url, 0, len(url)-1)
 		}
 
 		req, err = http.NewRequest(method, url, nil)
@@ -183,30 +166,11 @@ func getResponse(r *R, method string, url string) (*http.Response, error) {
 
 		p := r.Parameter
 
-		//url+="?"
+		postForm = resolveInterface(p, postForm, []string{})
 
-		for i, v := range p {
+		if tools.SubStr(postForm, len(postForm)-1, -1) == "&" {
 
-			switch key := v.(type) {
-
-			case string:
-
-				postForm += i + "=" + key + "&"
-
-			case int:
-
-				postForm += i + "=" + strconv.Itoa(key) + "&"
-
-			case []string:
-
-				for _, vv := range key {
-
-					postForm += i + "[]=" + vv + "&"
-
-				}
-
-			}
-
+			postForm = tools.SubStr(postForm, 0, len(postForm)-1)
 		}
 
 		req, err = http.NewRequest(method, url, strings.NewReader(postForm))
@@ -250,8 +214,6 @@ func getResponse(r *R, method string, url string) (*http.Response, error) {
 		resp, e = r.c.client.Do(req)
 
 		if e != nil {
-
-			//fmt.Println("retry ",i+1)
 
 			continue
 		}
@@ -546,5 +508,85 @@ func (r *R) DownloadFile(url string, path string) error {
 	}
 
 	return nil
+
+}
+
+//解析参数拼接参数字符串
+func resolveInterface(p map[string]interface{}, form string, parentName []string) string {
+
+	if len(p) > 0 {
+
+		for i, v := range p {
+
+			switch key := v.(type) {
+
+			case string:
+
+				form += getKey(parentName, i) + "=" + key + "&"
+
+			case int:
+
+				form += getKey(parentName, i) + "=" + strconv.Itoa(key) + "&"
+
+			case []string:
+
+				for _, vv := range key {
+
+					form += getKey(parentName, i) + "[]=" + vv + "&"
+
+				}
+
+			case []int:
+
+				for _, vv := range key {
+
+					form += getKey(parentName, i) + "[]=" + strconv.Itoa(vv) + "&"
+
+				}
+
+			case map[string]interface{}:
+
+				t := append(parentName, i)
+
+				form = resolveInterface(key, form, t)
+
+			}
+
+		}
+
+	}
+
+	return form
+}
+
+func getKey(parentName []string, ii string) string {
+
+	f := ""
+
+	for i, s := range parentName {
+
+		if i == 0 {
+
+			f += s
+
+		} else {
+
+			f += "[" + s + "]"
+
+		}
+
+	}
+
+	if len(parentName) > 0 {
+
+		f += "[" + ii + "]"
+
+	} else {
+
+		f += ii
+
+	}
+
+	return f
 
 }
