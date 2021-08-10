@@ -227,6 +227,11 @@ func getResponse(r *R, method string, url string) (*http.Response, error) {
 		return resp, e
 	}
 
+	if resp.StatusCode != 200 {
+
+		return resp, errors.New("status is " + strconv.Itoa(resp.StatusCode))
+	}
+
 	return resp, nil
 
 }
