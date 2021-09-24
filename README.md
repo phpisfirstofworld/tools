@@ -13,7 +13,7 @@ go get github.com/PeterYangs/tools
 
 
 
-```
+```go
 
 import "github.com/PeterYangs/tools/http"
 
@@ -92,7 +92,7 @@ html,err:=client.Request().SetReTryTimes(3).GetToString("https://xxxccaacasdad.c
 
 **2.时间处理**
 
-```
+```go
 //时间戳转时间格式，目前仅支持Y、m、d、H、i、s、w
 tools.Date("Y-m-d", time.Now().Unix())
 tools.Date("Y-m-d H:i:s", time.Now().Unix()))
@@ -117,7 +117,7 @@ tools.StrToTime("2020/12/12 11:32:00")
 
 **3.数组操作**
 
-```
+```go
 
 //in_array
 array := []string{"1", "2", "3", "4"}
@@ -150,7 +150,7 @@ fmt.Println(tools.Implode("-",arr))
 
 **4.文件操作**
 
-```
+```go
 
 //写入文件
 file:=write.Open("test.txt")
@@ -196,7 +196,7 @@ err:=read.Open("LICENSE").ReadBlock(1024,func(b []byte){})
 
 **5.字符串操作**
 
-```
+```go
 
 //explode
 str:="1,2,3"
@@ -217,8 +217,11 @@ fmt.Println(tools.Md5(str))
 //字符串截取
 str := "我尼玛"
 
+//起始1，长度1
 tools.SubStr(str, 1, 1)
-tools.SubStr(str, 1, -1)
+
+//起始字符串长度倒数第二，长度最大
+tools.SubStr(str, -2, -1)
 
 
 

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/axgle/mahonia"
 	"io"
+	"math"
 	"strings"
 )
 
@@ -100,18 +101,36 @@ func ConvertToByte(src string, srcCode string, targetCode string) []byte {
 	return cdata
 }
 
+// SubStr 字符串截取
+//start为-1则为最后一个，-2则为倒数第二，以此类推
+//length为-1则为最大长度
 func SubStr(str string, start int, length int) string {
 
 	temp := []rune(str)
 
-	if length == -1 {
+	if start < 0 {
+
+		_start := len(temp) - int(math.Abs(float64(start)))
+
+		if length == -1 {
+
+			return string(temp[_start:])
+		}
+
+		if _start+length > len(temp) {
+
+			return string(temp[_start:])
+		}
+
+		return string(temp[_start : _start+length])
+	}
+
+	if start+length > len(temp) {
 
 		return string(temp[start:])
 	}
 
-	//panic(len(temp))
-
-	if start+length > len(temp) {
+	if length == -1 {
 
 		return string(temp[start:])
 	}
