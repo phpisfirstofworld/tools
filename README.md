@@ -223,6 +223,9 @@ tools.SubStr(str, 1, 1)
 //起始字符串长度倒数第二，长度最大
 tools.SubStr(str, -2, -1)
 
+//起始0，长度倒数第二
+tools.SubStr(str, 0, -2)
+
 
 
 ```
