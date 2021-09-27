@@ -3,10 +3,10 @@
 go的工具集
 
 **安装**
-
+```shell
 go get github.com/PeterYangs/tools
+```
 
-<br/>
 
 **1.网络请求**
 
