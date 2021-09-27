@@ -103,7 +103,7 @@ func ConvertToByte(src string, srcCode string, targetCode string) []byte {
 
 // SubStr 字符串截取
 //start为-1则为最后一个，-2则为倒数第二，以此类推
-//length为-1则为最大长度
+//length为-1则为最大长度,-2则倒数第二，以此类推
 func SubStr(str string, start int, length int) string {
 
 	temp := []rune(str)
@@ -112,9 +112,17 @@ func SubStr(str string, start int, length int) string {
 
 		_start := len(temp) - int(math.Abs(float64(start)))
 
-		if length == -1 {
+		if length < 0 {
 
-			return string(temp[_start:])
+			end := len(temp) - int(math.Abs(float64(length))) + 1
+
+			if end < start {
+
+				return ""
+
+			}
+
+			return string(temp[start:end])
 		}
 
 		if _start+length > len(temp) {
@@ -130,9 +138,17 @@ func SubStr(str string, start int, length int) string {
 		return string(temp[start:])
 	}
 
-	if length == -1 {
+	if length < 0 {
 
-		return string(temp[start:])
+		end := len(temp) - int(math.Abs(float64(length))) + 1
+
+		if end < start {
+
+			return ""
+
+		}
+
+		return string(temp[start:end])
 	}
 
 	return string(temp[start : start+length])
