@@ -116,13 +116,13 @@ func SubStr(str string, start int, length int) string {
 
 			end := len(temp) - int(math.Abs(float64(length))) + 1
 
-			if end < start {
+			if end < _start {
 
 				return ""
 
 			}
 
-			return string(temp[start:end])
+			return string(temp[_start:end])
 		}
 
 		if _start+length > len(temp) {

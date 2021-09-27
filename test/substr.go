@@ -13,7 +13,7 @@ func main() {
 	//
 	//fmt.Println(s_[1:2])
 
-	s := tools.SubStr(str, 0, -2)
+	s := tools.SubStr(str, -1, -1)
 	//s:=tools.SubStr(str,1,-1)
 
 	fmt.Println(s)
