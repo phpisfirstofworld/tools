@@ -10,8 +10,7 @@ go get github.com/PeterYangs/tools
 
 **1.网络请求**
 
-
-
+网络请求已拆分到新仓库https://github.com/PeterYangs/request
 
 ```go
 
