@@ -106,6 +106,11 @@ func ConvertToByte(src string, srcCode string, targetCode string) []byte {
 //length为-1则为最大长度,-2则倒数第二，以此类推
 func SubStr(str string, start int, length int) string {
 
+	if str == "" {
+
+		return ""
+	}
+
 	temp := []rune(str)
 
 	if start < 0 {
