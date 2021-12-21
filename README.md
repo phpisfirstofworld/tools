@@ -243,7 +243,8 @@ func main() {
 
 	source := "hello world"
 	fmt.Println("原字符：", source)
-
+    
+	//生成key
 	key := d.GenerateKey() //24位
 
 	//加密
