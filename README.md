@@ -243,12 +243,11 @@ func main() {
 
 	source := "hello world"
 	fmt.Println("原字符：", source)
-    
-	//生成key
+
 	key := d.GenerateKey() //24位
 
 	//加密
-	code, err := d.Encyptog3DES([]byte(source), []byte(key))
+	code, err := d.Encyptog3DES([]byte(source), key)
 
 	if err != nil {
 
@@ -257,10 +256,10 @@ func main() {
 		return
 	}
 
-	fmt.Println("密文：", code.ToBase64())
+	fmt.Println("密文：", string(code.ToBase64()))
 
 	//解密
-	real, err := d.Decrptog3DES([]byte(code.ToBase64()), []byte(key), secret.Base64)
+	real, err := d.Decrptog3DES(code.ToBase64(), key, secret.Base64)
 	//
 	if err != nil {
 
@@ -272,5 +271,4 @@ func main() {
 	fmt.Println("解密：", string(real))
 
 }
-
 ```

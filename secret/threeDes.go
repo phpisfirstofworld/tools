@@ -30,14 +30,14 @@ func NewDesPassword(original []byte) *desPassword {
 	return &desPassword{original: original}
 }
 
-func (dp *desPassword) ToBase64() string {
+func (dp *desPassword) ToBase64() []byte {
 
-	return base64.StdEncoding.EncodeToString(dp.original)
+	return []byte(base64.StdEncoding.EncodeToString(dp.original))
 }
 
-func (dp *desPassword) ToHex() string {
+func (dp *desPassword) ToHex() []byte {
 
-	return hex.EncodeToString(dp.original)
+	return []byte(hex.EncodeToString(dp.original))
 }
 
 func (dp *desPassword) ToOriginal() []byte {
@@ -51,7 +51,7 @@ func NewDes() *desSecret {
 }
 
 // GenerateKey 生成key
-func (d *desSecret) GenerateKey() string {
+func (d *desSecret) GenerateKey() []byte {
 
 	str := "1234567890qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM"
 
@@ -64,7 +64,7 @@ func (d *desSecret) GenerateKey() string {
 
 	}
 
-	return key
+	return []byte(key)
 
 }
 
