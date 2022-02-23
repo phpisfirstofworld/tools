@@ -113,6 +113,11 @@ func SubStr(str string, start int, length int) string {
 
 	temp := []rune(str)
 
+	if start > len(temp) {
+
+		return ""
+	}
+
 	if start < 0 {
 
 		_start := len(temp) - int(math.Abs(float64(start)))
