@@ -163,3 +163,15 @@ func SubStr(str string, start int, length int) string {
 
 	return string(temp[start : start+length])
 }
+
+func StrPos(str, substr string) int {
+	// 子串在字符串的字节位置
+	result := strings.Index(str, substr)
+	if result > 0 {
+		prefix := []byte(str)[0:result]
+		rs := []rune(string(prefix))
+		result = len(rs)
+	}
+
+	return result
+}
