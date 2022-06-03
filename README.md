@@ -150,44 +150,45 @@ fmt.Println(tools.Implode("-",arr))
 **4.文件操作**
 
 ```go
+package main
 
-//写入文件
-file:=write.Open("test.txt")
+import (
+	"fmt"
+	"github.com/PeterYangs/tools/file"
+)
 
-file.Write([]byte("hello"))
+func main() {
+    
+	//一次性读取
+	str, err := file.Read("README.md")
+
+	if err != nil {
+
+		fmt.Println(err)
+
+		return
+	}
+
+	fmt.Println(string(str))
 
 
+	//逐行读取
+	err := file.ReadLine("README.md", func(line []byte) {
 
-//追加写入
-f:=write.OpenAppend("test.txt")
+		fmt.Println(string(line))
 
-for i := 0; i < 10; i++ {
+	})
 
-    err:=f.WriteNotClose([]byte("hello\n"))
+	if err != nil {
 
-    if err != nil {
+		fmt.Println(err)
 
-        fmt.Println(err)
+		return
+	}
 
-        return
-    }
-
+	//一次性写入
+	file.Write("xx.txt", []byte("123"))
 }
-
-f.Close()
-
-
-
-
-//文件读取
-s,err:=read.Open("LICENSE").Read()
-
-
-//分块读取
-err:=read.Open("LICENSE").ReadBlock(1024,func(b []byte){})
-
-
-
 ```
 
 <br/>
