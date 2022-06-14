@@ -7,6 +7,8 @@ import (
 
 func main() {
 
-	fmt.Println(link.GetCompleteLink("https://www.925g.com/dongtai/128405.html", "../123.png"))
+	//fmt.Println(filepath.Dir("www.xyzs.com/public/css/style.css"))
+
+	fmt.Println(link.GetCompleteLink("https://www.xyzs.com/public/css/style.css", "../img/bgrat.png"))
 
 }

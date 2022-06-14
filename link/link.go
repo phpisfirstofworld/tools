@@ -40,7 +40,7 @@ func GetCompleteLink(currentLink string, targetLink string) (string, error) {
 
 	case case4:
 
-		return u.Scheme + "://" + strings.Replace(filepath.Join(u.Host+u.Path, targetLink), "\\", "/", -1), nil
+		return u.Scheme + "://" + strings.Replace(filepath.Join(strings.Replace(filepath.Dir(u.Host+u.Path), "\\", "/", -1), targetLink), "\\", "/", -1), nil
 
 	}
 
