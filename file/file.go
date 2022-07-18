@@ -123,7 +123,7 @@ func ReadLineChunk(path string, offset int, size int, callback func(list []strin
 
 func Write(path string, content []byte) error {
 
-	f, err := os.OpenFile(path, os.O_CREATE|os.O_RDWR, 0644)
+	f, err := os.OpenFile(path, os.O_CREATE|os.O_RDWR|os.O_TRUNC, 0644)
 
 	if err != nil {
 
