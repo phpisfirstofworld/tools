@@ -62,7 +62,7 @@ func ReadLine(path string, callback func(line []byte)) error {
 	return nil
 }
 
-func ReadLineChunk(path string, size int, callback func(list []string)) error {
+func ReadLineChunk(path string, offset int, size int, callback func(list []string)) error {
 
 	f, err := os.Open(path)
 
@@ -76,6 +76,8 @@ func ReadLineChunk(path string, size int, callback func(list []string)) error {
 	var c []string
 
 	r := bufio.NewReader(f)
+
+	currentOffset := 0
 
 	for {
 
@@ -97,6 +99,13 @@ func ReadLineChunk(path string, size int, callback func(list []string)) error {
 
 		}
 
+		if offset > currentOffset {
+
+			currentOffset++
+
+			continue
+		}
+
 		c = append(c, string(l))
 
 		if len(c) >= size {
@@ -106,6 +115,7 @@ func ReadLineChunk(path string, size int, callback func(list []string)) error {
 			c = []string{}
 		}
 
+		currentOffset++
 	}
 
 	return nil
