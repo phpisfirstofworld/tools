@@ -62,6 +62,55 @@ func ReadLine(path string, callback func(line []byte)) error {
 	return nil
 }
 
+func ReadLineChunk(path string, size int, callback func(list []string)) error {
+
+	f, err := os.Open(path)
+
+	if err != nil {
+
+		return err
+	}
+
+	defer f.Close()
+
+	var c []string
+
+	r := bufio.NewReader(f)
+
+	for {
+
+		l, _, e := r.ReadLine()
+
+		if e != nil {
+
+			if e != io.EOF {
+
+				return e
+			}
+
+			if len(c) != 0 {
+
+				callback(c)
+			}
+
+			break
+
+		}
+
+		c = append(c, string(l))
+
+		if len(c) >= size {
+
+			callback(c)
+
+			c = []string{}
+		}
+
+	}
+
+	return nil
+}
+
 func Write(path string, content []byte) error {
 
 	f, err := os.OpenFile(path, os.O_CREATE|os.O_RDWR, 0644)
