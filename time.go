@@ -15,13 +15,15 @@ func Date(format string, timestamp int64) string {
 
 	t := time.Unix(timestamp, 0)
 	//f := "2006-01-02 15:04:05"
-	f := strings.Replace(format, "Y", "2006", -1)
-	f = strings.Replace(f, "m", "01", -1)
-	f = strings.Replace(f, "d", "02", -1)
-	f = strings.Replace(f, "H", "15", -1)
-	f = strings.Replace(f, "i", "04", -1)
-	f = strings.Replace(f, "s", "05", -1)
-	f = strings.Replace(f, "w", "Monday", -1)
+	f := strings.Replace(format, "Y", "2006", -1) //年 2022
+	f = strings.Replace(f, "m", "01", -1)         // 月  01 到12
+	f = strings.Replace(f, "M", "Jan", -1)        // 月  Jan 到 Dec
+	f = strings.Replace(f, "d", "02", -1)         // 天  01 到 31
+	f = strings.Replace(f, "H", "15", -1)         // 小时 00 到 59
+	f = strings.Replace(f, "i", "04", -1)         // 分 00 到 59
+	f = strings.Replace(f, "s", "05", -1)         // 秒 00 到 59
+	f = strings.Replace(f, "w", "Monday", -1)     //Sunday 到 Saturday
+	f = strings.Replace(f, "D", "Mon", -1)        // Mon 到 Sun
 
 	return t.Format(f)
 
