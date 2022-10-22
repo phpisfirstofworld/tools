@@ -2,6 +2,8 @@ package file
 
 import (
 	"bufio"
+	"context"
+	"errors"
 	"io"
 	"io/ioutil"
 	"os"
@@ -41,6 +43,50 @@ func ReadLine(path string, callback func(line []byte)) error {
 	r := bufio.NewReader(f)
 
 	for {
+
+		l, _, e := r.ReadLine()
+
+		if e != nil {
+
+			if e != io.EOF {
+
+				return e
+			}
+
+			break
+
+		}
+
+		callback(l)
+
+	}
+
+	return nil
+}
+
+func ReadLineWithCxt(cxt context.Context, path string, callback func(line []byte)) error {
+
+	f, err := os.Open(path)
+
+	if err != nil {
+
+		return err
+	}
+
+	defer f.Close()
+
+	r := bufio.NewReader(f)
+
+	for {
+
+		select {
+		case <-cxt.Done():
+
+			return errors.New("cxt cancel")
+
+		default:
+
+		}
 
 		l, _, e := r.ReadLine()
 
