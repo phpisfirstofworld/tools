@@ -64,6 +64,47 @@ func ReadLine(path string, callback func(line []byte)) error {
 	return nil
 }
 
+// ReadLineWithBreak  逐行读取可退出
+func ReadLineWithBreak(path string, callback func(line []byte) bool) error {
+
+	f, err := os.Open(path)
+
+	if err != nil {
+
+		return err
+	}
+
+	defer f.Close()
+
+	r := bufio.NewReader(f)
+
+	for {
+
+		l, _, e := r.ReadLine()
+
+		if e != nil {
+
+			if e != io.EOF {
+
+				return e
+			}
+
+			break
+
+		}
+
+		ok := callback(l)
+
+		if !ok {
+
+			break
+		}
+
+	}
+
+	return nil
+}
+
 func ReadLineWithCxt(cxt context.Context, path string, callback func(line []byte)) error {
 
 	f, err := os.Open(path)
