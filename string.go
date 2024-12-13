@@ -105,6 +105,17 @@ func ConvertToByte(src string, srcCode string, targetCode string) ([]byte, error
 	return cdata, nil
 }
 
+func Convert(str string, srcCode string, targetCode string) (string, error) {
+	srcCoder := mahonia.NewDecoder(srcCode)
+	if srcCoder == nil {
+		return "", errors.New("convert to string fail")
+	}
+	srcResult := srcCoder.ConvertString(str)
+	tagCoder := mahonia.NewDecoder(targetCode)
+	_, cdata, _ := tagCoder.Translate([]byte(srcResult), true)
+	return string(cdata), nil
+}
+
 // SubStr 字符串截取
 // start为-1则为最后一个，-2则为倒数第二，以此类推
 // length为-1则为最大长度,-2则倒数第二，以此类推
