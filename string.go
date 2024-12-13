@@ -2,6 +2,7 @@ package tools
 
 import (
 	"crypto/md5"
+	"errors"
 	"fmt"
 	"github.com/axgle/mahonia"
 	"io"
@@ -93,17 +94,20 @@ func isUtf8(data []byte) bool {
 	return true
 }
 
-func ConvertToByte(src string, srcCode string, targetCode string) []byte {
+func ConvertToByte(src string, srcCode string, targetCode string) ([]byte, error) {
 	srcCoder := mahonia.NewDecoder(srcCode)
+	if srcCoder == nil {
+		return []byte{}, errors.New("convert to byte fail")
+	}
 	srcResult := srcCoder.ConvertString(src)
 	tagCoder := mahonia.NewDecoder(targetCode)
 	_, cdata, _ := tagCoder.Translate([]byte(srcResult), true)
-	return cdata
+	return cdata, nil
 }
 
 // SubStr 字符串截取
-//start为-1则为最后一个，-2则为倒数第二，以此类推
-//length为-1则为最大长度,-2则倒数第二，以此类推
+// start为-1则为最后一个，-2则为倒数第二，以此类推
+// length为-1则为最大长度,-2则倒数第二，以此类推
 func SubStr(str string, start int, length int) string {
 
 	if str == "" {
